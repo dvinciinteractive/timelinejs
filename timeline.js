@@ -69,6 +69,7 @@ Timeline.prototype.stop = function()
 	this.pause();
 	this.current = null;
 	this.paused = false;
+	this.playing = false;
 }
 
 /** 

@@ -1,0 +1,109 @@
+<html>
+	<head>
+		<title>timelinejs Example</title>
+		<style>
+			#outer {
+				text-align: center;
+			}
+			#presentation {
+				text-align: center; 
+				border: 4px solid black; 
+				background-color: #EEF;
+				width: 400px; 
+				margin: 0 auto; 
+				height: 180px; 
+				padding-top: 60px; 
+				padding-bottom: 60px; 
+				position: relative;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<div id="outer">
+			<div>
+				<select id="jump" onchange="tm.search('award', this.value)"></select>
+			</div>
+			<div id="presentation"></div>
+			<div>
+				<button type="button" onclick="tm.prev('marker', 'begin')">&lt;</button>
+				<button type="button" onclick="tm_toggle($(this))">Play</button>
+				<button type="button" onclick="tm.next('marker', 'begin')">&gt;</button>
+			</div>
+		</div>
+		
+		<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="timeline.js"></script>
+		<script src="timeline.default.js"></script>
+		
+		<script>
+		
+			var slideshow = [
+				{title:'Annual Award for', subtitle:'Being Awesome', id:0, people:[
+					{first:'John', last:'Jacob'},
+					{first:'Mary', last:'Todd'}
+				]},
+				{title:'Semi-Annual Award for', subtitle:'Intelligence', id:1, people:[
+					{first:'Elmer', last:'Fudd'},
+					{first:'Jonathan', last:'Tomale'},
+					{first:'Kitty', last:'Cat'}
+				]},
+				{title:'Award for', subtitle:'Animal Noises', id:2, people:[
+					{first:'Miss', last:'Piggy'},
+					{first:'Kermit', last:'Frog'},
+					{first:'Fox', last:'Hound'},
+					{first:'Lady', last:'Tramp'}
+				]},
+			];
+		
+			var tm = new Timeline();
+			var pres = $('#presentation');
+			var options = '';
+			
+			tm.addAnimation( pres, {opacity:0.0, left:'200px'}, 0 );
+			
+			for (var i = 0; i < slideshow.length; i++) {
+				var slide = slideshow[i];
+				var people = slide.people;
+				
+				options += '<option value="' + slide.id + '">' + slide.title + ' ' + slide.subtitle + '</option>';
+				
+				tm.addMarker( 'award', slide.id );
+				tm.addMarker( 'marker', 'begin' );
+				tm.addHtml( pres, '<h3>' + slide.title + '</h3><h1>' + slide.subtitle + '</h1>' );
+				tm.addAnimation( pres, {opacity:1.0, left:'0px'} );
+				tm.addPause( 3000 );
+				tm.addAnimation( pres, {opacity:0.0, left:'-200px'} );
+				
+				for (var k = 0; k < people.length; k++) {
+					var person = people[k];
+					
+					tm.addAnimation( pres, {left:'200px'}, 0 );
+					tm.addMarker( 'marker', 'begin' );
+					tm.addHtml( pres, '<h3>' + person.first + ' ' + person.last + '</h3>Awarded for<h4>' + slide.subtitle + '</h4>' );
+					tm.addAnimation( pres, {opacity:1.0, left:'0px'} );
+					tm.addPause( 3000 );
+					tm.addAnimation( pres, {opacity:0.0, left:'-200px'} );
+				}
+				
+				tm.addAnimation( pres, {opacity:0.0, left:'200px'}, 0 );
+			}
+			
+			$('#jump').html(options);
+			
+			function tm_toggle(btn) {
+				if (tm.paused || !tm.playing) {
+					tm.play();
+					btn.html('Pause');
+				} else {
+					tm.pause();
+					btn.html('Play');
+				}
+			}
+			
+		</script>
+		
+		
+		
+	</body>
+</html>
