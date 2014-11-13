@@ -9,7 +9,7 @@
  *		Timeline.register('addCustom', {
  * 			create: function( arguments... ) {},
  * 			start: function( oncomplete ) {},
- *          pause: function() {},
+ *      pause: function() {},
  *			resume: function( oncomplete ) {}
  * 		});
  *
