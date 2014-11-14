@@ -6,8 +6,9 @@
  */
 
 Timeline.register('addAudio', {
-	create: function(url) {
+	create: function(url, volume) {
 		this.url = url;
+		this.volume = typeof(volume) !== 'undefined' ? volume : 1.0;
 		this.audio = null;
 	},
 	start: function(oncomplete) {
@@ -21,12 +22,14 @@ Timeline.register('addAudio', {
 			oncomplete();
 			event.audio = null;
 		});
+		this.audio.volume = Math.min(this.volume, Timeline.audio.maxVolume);
 		this.audio.play();
 	},
 	pause: function() {
 		this.audio.pause();
 	},
 	resume: function(oncomplete) {
+		this.audio.volume = Math.min(this.volume, Timeline.audio.maxVolume);
 		this.audio.play();
 	}
 });
@@ -37,6 +40,16 @@ Timeline.register('addAudio', {
 Timeline.isAudioSupported = function()
 {
 	return !!window.Audio;
+};
+
+/**
+ * Audio settings.
+ *
+ * TODO keep track of playing audios so their volumes can be changed immediately.
+ */
+Timeline.audio = 
+{
+	maxVolume: 1.0
 };
 
 /**
@@ -157,6 +170,88 @@ Timeline.register('addMarker', {
 		this[marker] = value;
 	},
 	start: function(oncomplete) {
+		oncomplete();
+	}
+});
+
+/**
+ * ================ WAITING FOR DOM EVENTS =================
+ * 
+ * timeline.addWaitUntil( $('#elements'), 'click' );
+ */
+
+Timeline.register('addWaitUtil', {
+	create: function(jquery, event) {
+		this.jquery = jquery;
+		this.event = event;
+		this.oncomplete = null;
+		
+		var my = this;
+		this.handler = function() {
+			my.jquery.off( my.event, my.handler );
+			my.oncomplete();
+		};
+	},
+	start: function(oncomplete) {
+		this.oncomplete = oncomplete;
+		this.jquery.on( this.event, this.handler );
+	},
+	pause: function() {
+		this.jquery.off( this.event, this.handler );
+	},
+	resume: function(oncomplete) {
+		this.oncomplete = oncomplete;
+		this.jquery.on( this.event, this.handler );
+	}
+});
+
+/**
+ * ================ APPENDING HTML OR ELEMENTS =================
+ * 
+ * timeline.addAppend( $('#elements'), 'text to append or elements' );
+ */
+
+Timeline.register('addAppend', {
+	create: function(jquery, append) {
+		this.jquery = jquery;
+		this.append = append;
+	},
+	start: function(oncomplete) {
+		this.jquery.append( this.append );
+		oncomplete();
+	}
+});
+
+/**
+ * ================ PREPENDING HTML OR ELEMENTS =================
+ * 
+ * timeline.addPrepend( $('#elements'), 'text to prepend or elements' );
+ */
+
+Timeline.register('addPrepend', {
+	create: function(jquery, append) {
+		this.jquery = jquery;
+		this.append = append;
+	},
+	start: function(oncomplete) {
+		this.jquery.prepend( this.append );
+		oncomplete();
+	}
+});
+
+/**
+ * ================ SET CSS OF ELEMENTS =================
+ * 
+ * timeline.addCss( $('#elements'), {color:'red'} );
+ */
+
+Timeline.register('addCss', {
+	create: function(jquery, css) {
+		this.jquery = jquery;
+		this.css = css;
+	},
+	start: function(oncomplete) {
+		this.jquery.css( this.css );
 		oncomplete();
 	}
 });

@@ -72,7 +72,9 @@
 				tm.addMarker( 'marker', 'begin' );
 				tm.addHtml( pres, '<h3>' + slide.title + '</h3><h1>' + slide.subtitle + '</h1>' );
 				tm.addAnimation( pres, {opacity:1.0, left:'0px'} );
-				tm.addPause( 3000 );
+				tm.addPause( 2000 );
+				tm.addAppend( pres, '<h4>(click to see recipients)</h4>' );
+				tm.addWaitUtil( pres, 'click' );
 				tm.addAnimation( pres, {opacity:0.0, left:'-200px'} );
 				
 				for (var k = 0; k < people.length; k++) {

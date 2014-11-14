@@ -27,7 +27,12 @@ function Timeline()
 	this.oncomplete = [function() {
 		if (timeline.current) {
 			timeline.current = timeline.current.next;
-			timeline.invoke( 'start', timeline.oncomplete );
+			if (timeline.current) {
+				timeline.invoke( 'start', timeline.oncomplete );	
+			} else {
+				timeline.paused = false;
+				timeline.playing = false;
+			}
 		}
 	}];
 }
