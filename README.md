@@ -5,11 +5,15 @@ timelinejs is a simple library for creating a series of events which can be play
 
 The type of events:
 * playing audio
-* animate element
+* animate elements
 * pausing
 * adding markers for searching, forwarding, & rewinding
 * setting inner html
 * execute function
+* wait for user input
+* append elements
+* prepend elements
+* setting the css
 * add your own!
  
 ### Adding your own
